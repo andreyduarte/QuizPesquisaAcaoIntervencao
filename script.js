@@ -1,4 +1,5 @@
 const quizData = [
+    // ... (mesmos dados do quizData anterior) ...
     {
       question: "Qual premissa fundamental estabelece o alicerce para a compreensão das posturas críticas da Pesquisa-Ação (PA) e da Pesquisa-Intervenção (PI), desafiando noções tradicionais de pesquisa?",
       options: [
@@ -8,7 +9,7 @@ const quizData = [
         "A busca exclusiva pela geração de conhecimento teórico, sem foco em problemas práticos."
       ],
       correctAnswerIndex: 2,
-      rationales: [ // Justificativas para cada opção
+      rationales: [ 
         "Ambas as abordagens frequentemente utilizam métodos qualitativos e participativos, em vez de se focarem na quantificação.",
         "Este é o princípio da pesquisa tradicional que ambas as abordagens buscam desafiar diretamente.",
         "Esta premissa questiona a objetividade pura e reconhece o pesquisador como um agente implicado na realidade que estuda.",
@@ -82,6 +83,7 @@ const quizData = [
 ];
 
 const mainQuizTitleEl = document.getElementById('main-quiz-title');
+const quizDescriptionAreaEl = document.getElementById('quiz-description-area');
 const quizContentEl = document.getElementById('quiz-content');
 const questionCounterEl = document.getElementById('question-counter');
 const currentQNumEl = document.getElementById('current-q-num');
@@ -93,22 +95,39 @@ const scoreAreaEl = document.getElementById('score-area');
 const finalScoreEl = document.getElementById('final-score');
 const restartBtnEl = document.getElementById('restart-btn');
 
-let currentQuestionIndex = 0;
+let currentQuestionIndex = 0; // Mantido para controlar as perguntas reais
 let score = 0;
 let answerProcessedForThisQuestion = false;
+let quizActive = false; // Nova flag para controlar se o quiz (perguntas) começou
 
 const optionLetters = ['A', 'B', 'C', 'D'];
+
+function initializeQuizView() {
+    quizActive = false;
+    currentQuestionIndex = 0; // Reseta o índice de perguntas para o início
+    score = 0;
+
+    mainQuizTitleEl.style.display = 'block';
+    quizDescriptionAreaEl.style.display = 'block';
+    quizContentEl.style.display = 'none';
+    scoreAreaEl.style.display = 'none';
+    
+    nextBtnEl.textContent = "Iniciar Quiz";
+    nextBtnEl.disabled = false;
+    nextBtnEl.style.display = 'inline-block'; // Garante que o botão esteja visível
+}
 
 function loadQuestion() {
     answerProcessedForThisQuestion = false;
     optionsContainerEl.innerHTML = '';
-    nextBtnEl.disabled = true;
-    nextBtnEl.textContent = "Avançar";
-
-    mainQuizTitleEl.style.display = currentQuestionIndex === 0 ? 'block' : 'none';
-    quizContentEl.style.display = 'block'; // Garante que o conteúdo do quiz seja visível
+    
+    mainQuizTitleEl.style.display = 'none'; // Título principal some após iniciar
+    quizDescriptionAreaEl.style.display = 'none';
+    quizContentEl.style.display = 'block';
     scoreAreaEl.style.display = 'none';
 
+    nextBtnEl.disabled = true; 
+    nextBtnEl.textContent = "Avançar";
 
     const currentQuestion = quizData[currentQuestionIndex];
     currentQNumEl.textContent = currentQuestionIndex + 1;
@@ -140,7 +159,6 @@ function loadQuestion() {
         
         const statusP = document.createElement('p');
         statusP.classList.add('feedback-status');
-        // Ícone e texto do status serão adicionados no handleOptionClick
         
         const rationaleP = document.createElement('p');
         rationaleP.classList.add('rationale-text');
@@ -165,9 +183,8 @@ function handleOptionClick(clickedOptionDiv, clickedIndex) {
     const correctAnswerIndex = currentQuestion.correctAnswerIndex;
 
     const allOptionDivs = optionsContainerEl.querySelectorAll('.option');
-    allOptionDivs.forEach(opt => opt.classList.add('processed')); // Marca todas como processadas
+    allOptionDivs.forEach(opt => opt.classList.add('processed'));
 
-    // Feedback para a opção clicada
     const clickedFeedbackDiv = clickedOptionDiv.querySelector('.option-feedback');
     const clickedStatusP = clickedFeedbackDiv.querySelector('.feedback-status');
 
@@ -179,7 +196,6 @@ function handleOptionClick(clickedOptionDiv, clickedIndex) {
         clickedOptionDiv.classList.add('incorrect-selection');
         clickedStatusP.innerHTML = '<span class="icon">✗</span> Não era bem isso.';
         
-        // Mostra feedback para a resposta correta também
         const correctOptionDiv = optionsContainerEl.querySelector(`.option[data-index='${correctAnswerIndex}']`);
         if (correctOptionDiv) {
             correctOptionDiv.classList.add('actually-correct');
@@ -190,30 +206,35 @@ function handleOptionClick(clickedOptionDiv, clickedIndex) {
     }
 }
 
-function showNextQuestionOrResults() {
-    currentQuestionIndex++;
-    if (currentQuestionIndex < quizData.length) {
-        loadQuestion();
-    } else {
-        showFinalScore();
+function handleNextButtonClick() {
+    if (!quizActive) { // Se o quiz (perguntas) não começou, inicia-o
+        quizActive = true;
+        loadQuestion(); // Carrega a primeira pergunta real
+    } else { // Se o quiz já está ativo, avança para a próxima pergunta ou resultados
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion();
+        } else {
+            showFinalScore();
+        }
     }
 }
 
 function showFinalScore() {
     mainQuizTitleEl.style.display = 'none';
+    quizDescriptionAreaEl.style.display = 'none';
     quizContentEl.style.display = 'none';
     scoreAreaEl.style.display = 'block';
     finalScoreEl.textContent = `${score} de ${quizData.length}`;
+    nextBtnEl.style.display = 'none'; // Esconde o botão "Avançar" na tela de score
 }
 
 function restartQuiz() {
-    currentQuestionIndex = 0;
-    score = 0;
-    loadQuestion(); // Isso já cuida de mostrar/esconder elementos
+    initializeQuizView();
 }
 
-nextBtnEl.addEventListener('click', showNextQuestionOrResults);
+nextBtnEl.addEventListener('click', handleNextButtonClick);
 restartBtnEl.addEventListener('click', restartQuiz);
 
-// Carrega a primeira pergunta ao iniciar
-loadQuestion();
+// Inicializa a visualização do quiz (mostra descrição)
+initializeQuizView();

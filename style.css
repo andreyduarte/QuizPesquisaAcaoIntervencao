@@ -21,23 +21,34 @@ body {
     background-color: #303134; /* Fundo do container do quiz */
     padding: 25px 30px;
     border-radius: 8px;
-    /* box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); */ /* Sombra sutil para modo escuro */
     width: 100%;
-    max-width: 700px; /* Um pouco mais largo */
+    max-width: 700px;
     margin-top: 20px;
 }
 
 h1#main-quiz-title {
     color: #e8eaed;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px; /* Reduzido um pouco */
     font-size: 1.8em;
 }
+
+#quiz-description-area {
+    color: #bdc1c6; /* Cinza claro para descrição */
+    font-size: 1.05em;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    padding: 10px;
+    text-align: center; /* Centraliza o texto da descrição */
+    border-bottom: 1px solid #5f6368; /* Linha separadora sutil */
+    padding-bottom: 30px;
+}
+
 
 #question-counter {
     text-align: left;
     font-size: 0.9em;
-    color: #bdc1c6; /* Cinza claro para o contador */
+    color: #bdc1c6; 
     margin-bottom: 10px;
 }
 
@@ -56,43 +67,43 @@ h2#question-text {
 }
 
 .option {
-    background-color: #3c4043; /* Fundo da opção */
-    border: 2px solid #5f6368; /* Borda padrão da opção */
+    background-color: #3c4043; 
+    border: 2px solid #5f6368; 
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 12px;
     cursor: pointer;
     transition: border-color 0.3s, background-color 0.3s;
     display: flex;
-    flex-direction: column; /* Para alinhar texto e feedback */
+    flex-direction: column;
 }
 
 .option:not(.processed):hover {
-    border-color: #8ab4f8; /* Borda azul clara no hover */
+    border-color: #8ab4f8; 
 }
 
 .option-main-content {
     display: flex;
-    align-items: center; /* Alinha letra e texto da opção */
+    align-items: center; 
 }
 
 .option-letter {
     font-weight: bold;
     margin-right: 12px;
-    color: #bdc1c6; /* Cor da letra da opção */
-    min-width: 20px; /* Para manter alinhamento */
+    color: #bdc1c6; 
+    min-width: 20px; 
 }
 
 .option-text {
     flex-grow: 1;
-    color: #e8eaed; /* Cor do texto da opção */
+    color: #e8eaed; 
 }
 
 .option-feedback {
-    display: none; /* Começa escondido */
+    display: none; 
     margin-top: 10px;
     padding-top: 10px;
-    border-top: 1px solid #5f6368; /* Linha separadora */
+    border-top: 1px solid #5f6368; 
 }
 
 .feedback-status {
@@ -109,51 +120,46 @@ h2#question-text {
 
 .rationale-text {
     font-size: 0.9em;
-    color: #bdc1c6; /* Cor da justificativa */
+    color: #bdc1c6; 
     line-height: 1.4;
 }
 
-/* Estilos para opção selecionada CORRETA */
 .option.correct-selection {
-    border-color: #34a853; /* Borda verde */
-    background-color: #2d3a32; /* Fundo levemente esverdeado escuro */
+    border-color: #34a853; 
+    background-color: #2d3a32; 
 }
 .option.correct-selection .option-feedback { display: block; }
-.option.correct-selection .feedback-status { color: #34a853; } /* Cor do texto "Resposta correta" */
+.option.correct-selection .feedback-status { color: #34a853; } 
 
-/* Estilos para opção selecionada INCORRETA */
 .option.incorrect-selection {
-    border-color: #ea4335; /* Borda vermelha */
-    background-color: #3a2d2d; /* Fundo levemente avermelhado escuro */
+    border-color: #ea4335; 
+    background-color: #3a2d2d; 
 }
 .option.incorrect-selection .option-feedback { display: block; }
-.option.incorrect-selection .feedback-status { color: #ea4335; } /* Cor do texto "Não era bem isso" */
+.option.incorrect-selection .feedback-status { color: #ea4335; } 
 
-/* Estilos para a opção que ERA a correta (quando o usuário errou) */
 .option.actually-correct {
-    border-color: #34a853; /* Borda verde */
+    border-color: #34a853; 
     background-color: #2d3a32;
 }
 .option.actually-correct .option-feedback { display: block; }
 .option.actually-correct .feedback-status { color: #34a853; }
 
-/* Opções processadas (não clicadas, não corretas após uma escolha) */
 .option.processed:not(.correct-selection):not(.incorrect-selection):not(.actually-correct) {
     opacity: 0.6;
     cursor: default;
 }
-.option.processed { /* Todas as opções após um clique */
+.option.processed { 
     cursor: default;
 }
 
-
 .button-container {
-    text-align: right; /* Alinha botão à direita */
+    text-align: right; 
 }
 
 button#next-btn, button#restart-btn {
-    background-color: #8ab4f8; /* Azul claro para o botão */
-    color: #202124; /* Texto escuro no botão */
+    background-color: #8ab4f8; 
+    color: #202124; 
     font-weight: bold;
     border: none;
     padding: 10px 20px;
@@ -168,8 +174,8 @@ button#next-btn:hover:not(:disabled), button#restart-btn:hover {
 }
 
 button#next-btn:disabled {
-    background-color: #5f6368; /* Cinza escuro para desabilitado */
-    color: #9aa0a6; /* Texto mais claro para desabilitado */
+    background-color: #5f6368; 
+    color: #9aa0a6; 
     cursor: not-allowed;
 }
 
@@ -181,7 +187,7 @@ button#next-btn:disabled {
 #score-area p { font-size: 1.4em; font-weight: bold; color: #e8eaed; margin-top: 10px; }
 
 button#restart-btn {
-    background-color: #34a853; /* Verde para reiniciar */
+    background-color: #34a853; 
     color: #fff;
     margin-top: 20px;
 }
