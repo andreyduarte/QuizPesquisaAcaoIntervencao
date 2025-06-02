@@ -1,0 +1,123 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.quiz-container {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #555;
+    margin-bottom: 15px;
+    min-height: 40px; /* Para evitar saltos de layout */
+}
+
+#options-container {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.option {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.option:hover {
+    background-color: #e9e9e9;
+}
+
+.option.selected {
+    background-color: #cce5ff; /* Azul claro para selecionado */
+    border-color: #007bff;
+}
+
+.option.correct {
+    background-color: #d4edda; /* Verde para correto */
+    border-color: #28a745;
+}
+
+.option.incorrect {
+    background-color: #f8d7da; /* Vermelho para incorreto */
+    border-color: #dc3545;
+}
+
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#feedback-area {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    min-height: 40px; /* Para evitar saltos de layout */
+}
+
+#feedback-area.correct-feedback {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+#feedback-area.incorrect-feedback {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+#score-area p {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#restart-btn {
+    background-color: #28a745;
+}
+
+#restart-btn:hover {
+    background-color: #1e7e34;
+}
