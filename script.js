@@ -8,12 +8,11 @@ const quizData = [
         "A busca exclusiva pela geração de conhecimento teórico, sem foco em problemas práticos."
       ],
       correctAnswerIndex: 2,
-      rationaleCorrect: "Correto! Esta premissa questiona a objetividade pura e reconhece o pesquisador como um agente implicado na realidade que estuda.",
-      rationaleOptions: [
-        "Ambas as abordagens frequentemente utilizam métodos qualitativos e participativos.",
-        "Este é o princípio da pesquisa tradicional que ambas as abordagens buscam desafiar.",
-        "Esta premissa questiona a objetividade pura e reconhece o pesquisador como um agente implicado.", // Rationale para a correta já está em rationaleCorrect
-        "Ambas as metodologias têm um forte compromisso com problemas do mundo real."
+      rationales: [ // Justificativas para cada opção
+        "Ambas as abordagens frequentemente utilizam métodos qualitativos e participativos, em vez de se focarem na quantificação.",
+        "Este é o princípio da pesquisa tradicional que ambas as abordagens buscam desafiar diretamente.",
+        "Esta premissa questiona a objetividade pura e reconhece o pesquisador como um agente implicado na realidade que estuda.",
+        "Ambas as metodologias têm um forte compromisso com problemas do mundo real e a transformação social."
       ]
     },
     {
@@ -25,12 +24,11 @@ const quizData = [
         "O foco único na geração de conhecimento teórico, desvinculado da solução de problemas práticos."
       ],
       correctAnswerIndex: 1,
-      rationaleCorrect: "Correto! Este ciclo contínuo de planejamento, ação, observação e reflexão é a espinha dorsal da PA.",
-      rationaleOptions: [
-        "A PA é marcada pela sua flexibilidade e dinamismo.",
-        "Este ciclo contínuo é a espinha dorsal da metodologia da PA.", // Rationale para a correta
-        "A participação ativa e colaborativa é um pilar da PA.",
-        "A PA tem um duplo objetivo de resolver problemas práticos e gerar conhecimento."
+      rationales: [
+        "A PA é marcada pela sua flexibilidade e dinamismo, adaptando-se à realidade.",
+        "Este ciclo contínuo de planejamento, ação, observação e reflexão é a espinha dorsal da metodologia da PA.",
+        "A participação ativa e colaborativa dos envolvidos é um pilar da PA.",
+        "A PA tem um duplo objetivo de resolver problemas práticos e, ao mesmo tempo, gerar conhecimento relevante."
       ]
     },
     {
@@ -42,12 +40,11 @@ const quizData = [
         "Priorizar a aplicação de teorias preexistentes para validar sua eficácia na prática."
       ],
       correctAnswerIndex: 2,
-      rationaleCorrect: "Correto! Esta inversão epistemológica é a marca da PI, onde o conhecimento emerge do próprio ato de transformar.",
-      rationaleOptions: [
-        "Esta é a lógica mais próxima da pesquisa tradicional ou da PA, que a PI busca inverter.",
-        "A PI é uma abordagem ativa e participativa.",
-        "Esta inversão epistemológica é a marca da PI.", // Rationale para a correta
-        "A PI busca produzir novos conhecimentos a partir da intervenção."
+      rationales: [
+        "Esta é a lógica mais próxima da pesquisa tradicional ou da PA, que a PI busca criticar e inverter.",
+        "A PI é uma abordagem ativa e participativa que recusa a passividade do observador.",
+        "Esta inversão epistemológica é a marca da PI, onde o conhecimento emerge do próprio ato de transformar.",
+        "A PI busca produzir novos conhecimentos e análises a partir da intervenção."
       ]
     },
     {
@@ -59,12 +56,11 @@ const quizData = [
         "A PA recusa a implicação do pesquisador, enquanto a PI a considera opcional."
       ],
       correctAnswerIndex: 1,
-      rationaleCorrect: "Correto! Esta é a distinção epistemológica mais precisa entre as duas abordagens.",
-      rationaleOptions: [
-        "Geralmente, a PI é que propõe uma crítica mais radical.",
-        "Esta é a distinção epistemológica mais precisa.", // Rationale para a correta
-        "O ciclo de planejar-agir-observar-refletir é da PA.",
-        "Ambas valorizam o envolvimento, mas a 'implicação' é central na PI."
+      rationales: [
+        "Geralmente, a PI é que propõe uma crítica mais radical às instituições.",
+        "Esta é a distinção epistemológica mais precisa entre as duas abordagens.",
+        "O ciclo de planejar-agir-observar-refletir é a marca registrada da PA, não da PI.",
+        "Ambas valorizam o envolvimento, mas a 'implicação' é um conceito metodológico central na PI."
       ]
     },
     {
@@ -76,99 +72,123 @@ const quizData = [
         "Uma opção exclusiva para pesquisas em ciências sociais, não podendo ser usada em outras áreas."
       ],
       correctAnswerIndex: 2,
-      rationaleCorrect: "Correto! Esta opção captura a profundidade da escolha metodológica.",
-      rationaleOptions: [
-        "A escolha do método envolve pressupostos teóricos e filosóficos.",
-        "A preferência está ligada a uma postura teórica e política.",
-        "Esta opção captura a profundidade da escolha metodológica.", // Rationale para a correta
-        "Os princípios destas metodologias são aplicados em diversas áreas."
+      rationales: [
+        "A escolha do método envolve pressupostos teóricos e filosóficos que vão além da técnica.",
+        "A preferência está ligada a uma postura teórica e política, não sendo apenas uma questão de gosto pessoal.",
+        "Esta opção captura a profundidade da escolha metodológica.",
+        "Os princípios destas metodologias são aplicados em diversas áreas, como saúde e educação."
       ]
     }
 ];
 
+const mainQuizTitleEl = document.getElementById('main-quiz-title');
+const quizContentEl = document.getElementById('quiz-content');
+const questionCounterEl = document.getElementById('question-counter');
+const currentQNumEl = document.getElementById('current-q-num');
+const totalQNumEl = document.getElementById('total-q-num');
 const questionTextEl = document.getElementById('question-text');
 const optionsContainerEl = document.getElementById('options-container');
 const nextBtnEl = document.getElementById('next-btn');
-const feedbackAreaEl = document.getElementById('feedback-area');
 const scoreAreaEl = document.getElementById('score-area');
 const finalScoreEl = document.getElementById('final-score');
 const restartBtnEl = document.getElementById('restart-btn');
-const questionAreaEl = document.getElementById('question-area');
 
 let currentQuestionIndex = 0;
 let score = 0;
-let selectedOptionElement = null;
-let answerChecked = false;
+let answerProcessedForThisQuestion = false;
+
+const optionLetters = ['A', 'B', 'C', 'D'];
 
 function loadQuestion() {
-    answerChecked = false;
-    selectedOptionElement = null;
-    feedbackAreaEl.innerHTML = '';
-    feedbackAreaEl.className = 'feedback-area'; // Reset class
-    optionsContainerEl.innerHTML = ''; // Limpa opções anteriores
+    answerProcessedForThisQuestion = false;
+    optionsContainerEl.innerHTML = '';
+    nextBtnEl.disabled = true;
+    nextBtnEl.textContent = "Avançar";
+
+    mainQuizTitleEl.style.display = currentQuestionIndex === 0 ? 'block' : 'none';
+    quizContentEl.style.display = 'block'; // Garante que o conteúdo do quiz seja visível
+    scoreAreaEl.style.display = 'none';
+
 
     const currentQuestion = quizData[currentQuestionIndex];
+    currentQNumEl.textContent = currentQuestionIndex + 1;
+    totalQNumEl.textContent = quizData.length;
     questionTextEl.textContent = currentQuestion.question;
 
     currentQuestion.options.forEach((optionText, index) => {
         const optionDiv = document.createElement('div');
         optionDiv.classList.add('option');
-        optionDiv.textContent = optionText;
         optionDiv.dataset.index = index;
-        optionDiv.addEventListener('click', () => selectOption(optionDiv, index));
+
+        const mainContentDiv = document.createElement('div');
+        mainContentDiv.classList.add('option-main-content');
+
+        const letterSpan = document.createElement('span');
+        letterSpan.classList.add('option-letter');
+        letterSpan.textContent = optionLetters[index];
+        mainContentDiv.appendChild(letterSpan);
+
+        const textSpan = document.createElement('span');
+        textSpan.classList.add('option-text');
+        textSpan.textContent = optionText;
+        mainContentDiv.appendChild(textSpan);
+        
+        optionDiv.appendChild(mainContentDiv);
+
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.classList.add('option-feedback');
+        
+        const statusP = document.createElement('p');
+        statusP.classList.add('feedback-status');
+        // Ícone e texto do status serão adicionados no handleOptionClick
+        
+        const rationaleP = document.createElement('p');
+        rationaleP.classList.add('rationale-text');
+        rationaleP.textContent = currentQuestion.rationales[index];
+        
+        feedbackDiv.appendChild(statusP);
+        feedbackDiv.appendChild(rationaleP);
+        optionDiv.appendChild(feedbackDiv);
+
+        optionDiv.addEventListener('click', () => handleOptionClick(optionDiv, index));
         optionsContainerEl.appendChild(optionDiv);
     });
-    nextBtnEl.textContent = "Verificar Resposta";
-    nextBtnEl.disabled = true; // Desabilita até uma opção ser selecionada
 }
 
-function selectOption(optionDiv, index) {
-    if (answerChecked) return; // Não permite mudar após checar
+function handleOptionClick(clickedOptionDiv, clickedIndex) {
+    if (answerProcessedForThisQuestion) return;
 
-    if (selectedOptionElement) {
-        selectedOptionElement.classList.remove('selected');
-    }
-    selectedOptionElement = optionDiv;
-    selectedOptionElement.classList.add('selected');
+    answerProcessedForThisQuestion = true;
     nextBtnEl.disabled = false;
-}
 
-function checkAnswer() {
-    answerChecked = true;
-    nextBtnEl.disabled = true; // Desabilita temporariamente
-    
     const currentQuestion = quizData[currentQuestionIndex];
-    const selectedIndex = parseInt(selectedOptionElement.dataset.index);
+    const correctAnswerIndex = currentQuestion.correctAnswerIndex;
 
-    // Remove 'selected' de todas e aplica 'correct' ou 'incorrect'
-    const optionsElements = optionsContainerEl.querySelectorAll('.option');
-    optionsElements.forEach(opt => opt.classList.remove('selected'));
+    const allOptionDivs = optionsContainerEl.querySelectorAll('.option');
+    allOptionDivs.forEach(opt => opt.classList.add('processed')); // Marca todas como processadas
 
-    if (selectedIndex === currentQuestion.correctAnswerIndex) {
+    // Feedback para a opção clicada
+    const clickedFeedbackDiv = clickedOptionDiv.querySelector('.option-feedback');
+    const clickedStatusP = clickedFeedbackDiv.querySelector('.feedback-status');
+
+    if (clickedIndex === correctAnswerIndex) {
+        clickedOptionDiv.classList.add('correct-selection');
+        clickedStatusP.innerHTML = '<span class="icon">✓</span> Resposta correta';
         score++;
-        selectedOptionElement.classList.add('correct');
-        feedbackAreaEl.textContent = currentQuestion.rationaleCorrect;
-        feedbackAreaEl.className = 'feedback-area correct-feedback';
     } else {
-        selectedOptionElement.classList.add('incorrect');
-        // Destaca a correta também
-        optionsElements[currentQuestion.correctAnswerIndex].classList.add('correct');
+        clickedOptionDiv.classList.add('incorrect-selection');
+        clickedStatusP.innerHTML = '<span class="icon">✗</span> Não era bem isso.';
         
-        let feedbackText = `Incorreto. ${currentQuestion.rationaleOptions[selectedIndex] || ''} `;
-        feedbackText += `A resposta correta era: "${currentQuestion.options[currentQuestion.correctAnswerIndex]}".`;
-        feedbackAreaEl.textContent = feedbackText;
-        feedbackAreaEl.className = 'feedback-area incorrect-feedback';
-    }
-    
-    // Habilita o botão para a próxima pergunta ou para finalizar
-    nextBtnEl.disabled = false;
-    if (currentQuestionIndex < quizData.length - 1) {
-        nextBtnEl.textContent = "Próxima Pergunta";
-    } else {
-        nextBtnEl.textContent = "Ver Pontuação Final";
+        // Mostra feedback para a resposta correta também
+        const correctOptionDiv = optionsContainerEl.querySelector(`.option[data-index='${correctAnswerIndex}']`);
+        if (correctOptionDiv) {
+            correctOptionDiv.classList.add('actually-correct');
+            const correctFeedbackDiv = correctOptionDiv.querySelector('.option-feedback');
+            const correctStatusP = correctFeedbackDiv.querySelector('.feedback-status');
+            correctStatusP.innerHTML = '<span class="icon">✓</span> Resposta correta';
+        }
     }
 }
-
 
 function showNextQuestionOrResults() {
     currentQuestionIndex++;
@@ -180,9 +200,8 @@ function showNextQuestionOrResults() {
 }
 
 function showFinalScore() {
-    questionAreaEl.style.display = 'none';
-    nextBtnEl.style.display = 'none';
-    feedbackAreaEl.style.display = 'none';
+    mainQuizTitleEl.style.display = 'none';
+    quizContentEl.style.display = 'none';
     scoreAreaEl.style.display = 'block';
     finalScoreEl.textContent = `${score} de ${quizData.length}`;
 }
@@ -190,27 +209,10 @@ function showFinalScore() {
 function restartQuiz() {
     currentQuestionIndex = 0;
     score = 0;
-    questionAreaEl.style.display = 'block';
-    nextBtnEl.style.display = 'inline-block';
-    feedbackAreaEl.style.display = 'block';
-    scoreAreaEl.style.display = 'none';
-    feedbackAreaEl.innerHTML = '';
-    feedbackAreaEl.className = 'feedback-area';
-    loadQuestion();
+    loadQuestion(); // Isso já cuida de mostrar/esconder elementos
 }
 
-nextBtnEl.addEventListener('click', () => {
-    if (!answerChecked) {
-        if (selectedOptionElement) {
-            checkAnswer();
-        } else {
-            // Poderia adicionar um alerta se nenhuma opção foi selecionada, mas o botão já fica desabilitado
-        }
-    } else {
-        showNextQuestionOrResults();
-    }
-});
-
+nextBtnEl.addEventListener('click', showNextQuestionOrResults);
 restartBtnEl.addEventListener('click', restartQuiz);
 
 // Carrega a primeira pergunta ao iniciar
